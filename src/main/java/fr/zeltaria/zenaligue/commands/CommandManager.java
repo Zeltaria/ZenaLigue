@@ -1,6 +1,7 @@
 package fr.zeltaria.zenaligue.commands;
 
 import fr.zeltaria.zenaligue.Main;
+import fr.zeltaria.zenaligue.database.SQLRequest;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
@@ -22,15 +23,30 @@ public class CommandManager extends ListenerAdapter {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event){
         String command = event.getName();
         Member member = event.getMember();
-        if (command.equals("setup")) {
-            if (member.hasPermission(Permission.ADMINISTRATOR)) {
-                event.deferReply().queue();
-                new SetupCommand(event).setup();
-            } else {
-                event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
+        switch (command){
+            case "setup" -> {
+                if (member.hasPermission(Permission.ADMINISTRATOR)) {
+                    event.deferReply().queue();
+                    new SetupCommand(event).setup();
+                } else {
+                    event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
+                }
             }
-        } else {
-            event.reply("Cette commande n'existe pas !").setEphemeral(true).queue();
+            case "new_ligue" -> {
+                if(member.hasPermission(Permission.ADMINISTRATOR)){
+                    if(SQLRequest.isLastLeagueFinished()){
+                        new StartNewLeagueCommand(event).startNewLeague();
+                    }
+                    else {
+                        event.reply("Vous ne pouvez pas lancer de nouvelle league tant que la précédente n'est pas finie !").setEphemeral(true).queue();
+                    }
+                }
+                else{
+                    event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
+                }
+
+            }
+            default -> event.reply("Cette commande n'existe pas !").setEphemeral(true).queue();
         }
     }
 
@@ -40,7 +56,7 @@ public class CommandManager extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildReady(GuildReadyEvent event) {
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
         resetCommands(event);
         if (Arrays.asList(Main.getInstance().getConfig().get("DISCORD_SERVERS_IDS").split(",")).contains(event.getGuild().getId())) {
             event.getGuild().updateCommands().addCommands(commandsInit()).queue();
@@ -70,6 +86,7 @@ public class CommandManager extends ListenerAdapter {
         List<CommandData> commandData = new ArrayList<>();
 
         commandData.add(Commands.slash("setup", "setup le bot"));
+        commandData.add(Commands.slash("new_ligue", "crée une nouvelle ligue"));
 
         return commandData;
     }

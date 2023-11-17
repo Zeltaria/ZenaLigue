@@ -1,5 +1,7 @@
 package fr.zeltaria.zenaligue.commands;
 
+import fr.zeltaria.zenaligue.classes.League;
+import fr.zeltaria.zenaligue.database.SQLRequest;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class StartNewLeagueCommand {
@@ -8,10 +10,9 @@ public class StartNewLeagueCommand {
 
     public StartNewLeagueCommand(SlashCommandInteractionEvent event) {
         this.event = event;
-        event.getHook().sendMessage("Commande en cours de développement !").queue();
     }
 
     public void startNewLeague() {
-
+        new League(SQLRequest.getLeagueId() /*+ 1*/);
     }
 }
