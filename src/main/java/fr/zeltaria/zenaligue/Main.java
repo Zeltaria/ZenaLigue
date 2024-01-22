@@ -1,9 +1,7 @@
 package fr.zeltaria.zenaligue;
 
-import fr.zeltaria.zenaligue.classes.League;
 import fr.zeltaria.zenaligue.commands.CommandManager;
 import fr.zeltaria.zenaligue.database.MySQL;
-import fr.zeltaria.zenaligue.database.SQLRequest;
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -20,7 +18,6 @@ public class Main {
     private final Dotenv config;
     private MySQL mysql;
     private static Main main;
-    private League league;
 
     public Main() throws LoginException {
         config = Dotenv.configure().load();
@@ -28,7 +25,7 @@ public class Main {
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(config.get("TOKEN"));
         initConnection();
         shardManager = builder.setStatus(OnlineStatus.ONLINE)
-                .setActivity(Activity.playing("Regarde la ZenaLigue"))
+                .setActivity(Activity.watching("la ZenaLigue"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_MESSAGES,
                         GatewayIntent.GUILD_EMOJIS_AND_STICKERS

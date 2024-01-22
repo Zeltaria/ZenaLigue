@@ -13,16 +13,18 @@ public enum ZenaEmojis {
     NARTA(1172285462606528513L),
     ROSLEG_SPARTIA(1172285459221725297L),
     MARONIS(1172285469577465957L),
-    NORDSTATD(1172285464594628820L),
+    NORDSTADT(1172285464594628820L),
     CIRA_EVO_CALGIO(1172286278436409415L),
     GENRIO(1172285476183478282L),
     DOMULONT(1172285478494552114L),
-    MERILAC(1172285466729533461L);
+    MERILAC(1172285466729533461L),
+    BLUEBALL(1199107221376737343L),
+    REDBALL(1199107218566545510L),;
 
     private final RichCustomEmoji emoji ;
-    private final Guild guild = Main.getInstance().getShardManager().getGuildById(815988245933457470L);
 
     ZenaEmojis(long emoji){
+        Guild guild = Main.getInstance().getShardManager().getGuildById(815988245933457470L);
         this.emoji = guild.getEmojiById(emoji);
     }
 

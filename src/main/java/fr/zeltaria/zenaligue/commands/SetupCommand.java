@@ -1,9 +1,7 @@
 package fr.zeltaria.zenaligue.commands;
 
 import fr.zeltaria.zenaligue.database.SQLRequest;
-import fr.zeltaria.zenaligue.enums.ZenaEmojis;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class SetupCommand {
@@ -18,9 +16,7 @@ public class SetupCommand {
         if(SQLRequest.getTextChannelIdFromGuildId(event.getGuild().getId()) != null){
             try {
                 channel = event.getGuild().getTextChannelById(SQLRequest.getTextChannelIdFromGuildId(event.getGuild().getId()));
-            }catch (NullPointerException ignored){
-
-            }
+            }catch (NullPointerException ignored){}
         }
         if(channel == null) {
             event.getGuild().createTextChannel("zenaligue")
@@ -29,7 +25,7 @@ public class SetupCommand {
                         SQLRequest.addGuild(event.getGuild().getId(), textChannel.getId());
                     });
         }else{
-            event.getHook().sendMessage("Le channel existe déjà ! Pas besoin de setup à nouveau ! " + ZenaEmojis.GENRIO.getEmoji()).queue();
+            event.getHook().sendMessage("Le channel existe déjà ! Pas besoin de setup à nouveau ! ").queue();
         }
     }
 }
