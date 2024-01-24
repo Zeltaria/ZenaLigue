@@ -110,6 +110,9 @@ public class CommandManager extends ListenerAdapter {
         OptionData goalOption = new OptionData(OptionType.INTEGER, "goal", "Id du but", true);
         commandData.add(Commands.slash("delete_goal", "Supprimer un but").addOptions(goalOption));
 
+        OptionData hourOption = new OptionData(OptionType.STRING, "hour", "Heure du démarrage de la journée (HH:mm)", true);
+        commandData.add(Commands.slash("start_day", "Démarrer la journée").addOptions(hourOption));
+
         return commandData;
     }
 
@@ -119,7 +122,7 @@ public class CommandManager extends ListenerAdapter {
         Member member = event.getMember();
         switch (command) {
             case "setup" -> {
-                if(memberCanUseCommand(member, event)){
+                if(member.hasPermission(Permission.ADMINISTRATOR)){
                     event.deferReply().queue();
                     new SetupCommand(event).setup();
                 } else {
@@ -226,6 +229,14 @@ public class CommandManager extends ListenerAdapter {
                 if(memberCanUseCommand(member, event)){
                     event.deferReply().queue();
                     new DeleteGoalCommand(event).deleteGoal();
+                } else {
+                    event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
+                }
+            }
+            case "start_day" -> {
+                if(memberCanUseCommand(member, event)){
+                    event.deferReply().queue();
+                    new StartDayCommand(event).startDay();
                 } else {
                     event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
                 }

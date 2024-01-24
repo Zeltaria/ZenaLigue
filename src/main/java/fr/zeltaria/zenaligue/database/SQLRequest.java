@@ -113,8 +113,8 @@ public class SQLRequest {
         Main.getInstance().getMySQL().update("INSERT INTO zenaligue_players (teamId, name, role, jersey) VALUES (" + teamId + ", '" + player.name() + "', '" + player.role().name() + "', " + player.jersey() + ")");
     }
 
-    public static void removePlayerFromTeam(int teamId, int jersey) {
-        Main.getInstance().getMySQL().update("DELETE FROM zenaligue_players WHERE teamId = " + teamId + " AND jersey = " + jersey);
+    public static void removePlayerFromId(int id) {
+        Main.getInstance().getMySQL().update("DELETE FROM zenaligue_players WHERE id = " + id);
     }
 
     public static Team getTeamFromId(int teamId) {
@@ -132,17 +132,6 @@ public class SQLRequest {
 
     public static boolean isTeamExist(int teamId) {
         return (Boolean) Main.getInstance().getMySQL().query("SELECT * FROM zenaligue_teams WHERE id = " + teamId, rs -> {
-            try {
-                return rs.next();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return false;
-        });
-    }
-
-    public static boolean isPlayerExist(int teamId, int jersey) {
-        return (Boolean) Main.getInstance().getMySQL().query("SELECT * FROM zenaligue_players WHERE teamId = " + teamId + " AND jersey = " + jersey, rs -> {
             try {
                 return rs.next();
             } catch (SQLException e) {
@@ -200,26 +189,6 @@ public class SQLRequest {
                 }
                 else {
                     return null;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-    }
-
-    public static Player getPlayer(int teamId, int jersey) {
-        return (Player) Main.getInstance().getMySQL().query("SELECT * FROM zenaligue_players WHERE teamId = " + teamId + " AND jersey = " + jersey, rs -> {
-            try {
-                if (rs.next()) {
-                    PlayerRole role = switch (rs.getString("role")){
-                        case "GARDIEN" -> PlayerRole.GARDIEN;
-                        case "MILIEU" -> PlayerRole.MILIEU;
-                        case "DEFENSEUR" -> PlayerRole.DEFENSEUR;
-                        case "ATTAQUANT" -> PlayerRole.ATTAQUANT;
-                        default -> null;
-                    };
-                    return new Player(rs.getInt("id"), rs.getString("name"), role, rs.getInt("jersey"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -410,7 +379,7 @@ public class SQLRequest {
             List<Goal> goals = new ArrayList<>();
             try {
                 while (rs.next()) {
-                    goals.add(new Goal(rs.getInt("id"), rs.getInt("matchId"), rs.getInt("teamId"), rs.getInt("playerId"), rs.getString("minute"), rs.getInt("csc")));
+                    goals.add(new Goal(rs.getInt("id"), rs.getInt("matchId"), rs.getInt("teamId"), rs.getInt("playerId"), rs.getInt("minute"), rs.getInt("csc")));
                 }
                 return goals;
             } catch (SQLException e) {
@@ -424,7 +393,7 @@ public class SQLRequest {
         return (Goal) Main.getInstance().getMySQL().query("SELECT * FROM zenaligue_goals WHERE id = " + goalId, rs -> {
             try {
                 if (rs.next()) {
-                    return new Goal(rs.getInt("id"), rs.getInt("matchId"), rs.getInt("teamId"), rs.getInt("playerId"), rs.getString("minute"), rs.getInt("csc"));
+                    return new Goal(rs.getInt("id"), rs.getInt("matchId"), rs.getInt("teamId"), rs.getInt("playerId"), rs.getInt("minute"), rs.getInt("csc"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -435,5 +404,13 @@ public class SQLRequest {
 
     public static void deleteGoal(int goalId) {
         Main.getInstance().getMySQL().update("DELETE FROM zenaligue_goals WHERE id = " + goalId);
+    }
+
+    public static void finishDay() {
+        Main.getInstance().getMySQL().update("UPDATE zenaligue_days SET finished = 1 WHERE id = " + getLastDayId());
+    }
+
+    public static void updateMatch(int id, int scoreL, int scoreE) {
+        Main.getInstance().getMySQL().update("UPDATE zenaligue_matchs SET scoreLoc = " + scoreL + ", scoreExt = " + scoreE + " WHERE id = " + id);
     }
 }

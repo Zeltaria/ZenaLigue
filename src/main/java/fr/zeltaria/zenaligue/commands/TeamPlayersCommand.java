@@ -26,7 +26,7 @@ public class TeamPlayersCommand {
                 """.formatted(team.name(), team.logo().getEmoji()));
         message.append("\n");
         for(Player player : SQLRequest.getPlayersFromTeamId(teamId)){
-            message.append(player.id()).append(" - ").append(player.name()).append("   ").append(player.jersey()).append("\n");
+            message.append(player.id()).append(" - ").append(player.name()).append(" ").append(player.role()).append(" ").append(player.jersey()).append("\n");
         }
         event.getHook().sendMessage(message.toString()).queue();
     }

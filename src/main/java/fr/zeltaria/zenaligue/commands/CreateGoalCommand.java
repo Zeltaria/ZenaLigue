@@ -35,6 +35,10 @@ public class CreateGoalCommand {
             event.getHook().sendMessage("Ce joueur ne joue pas dans ce match !").queue();
             return;
         }
+        if(minute <= 0 || minute > 90){
+            event.getHook().sendMessage("La minute doit être comprise entre 0 et 90 !").queue();
+            return;
+        }
         int csc;
         if(SQLRequest.getPlayerTeamId(buteur.id()) != teamId){
             csc = 1;

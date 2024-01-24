@@ -31,6 +31,6 @@ public class DeleteMatchCommand {
             return;
         }
         SQLRequest.deleteMatch(event.getOption("match").getAsInt());
-        event.getHook().sendMessage("Le match %s a bien été supprimé de la journée %s !".formatted((match.team1().name() + " - " + match.team2().name()), SQLRequest.getLastDayNumber())).queue();
+        event.getHook().sendMessage("Le match %s et tous les buts associés ont bien été supprimés de la journée %s !".formatted((match.team1().name() + " - " + match.team2().name()), SQLRequest.getLastDayNumber())).queue();
     }
 }

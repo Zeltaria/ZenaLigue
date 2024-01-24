@@ -1,5 +1,6 @@
 package fr.zeltaria.zenaligue.commands;
 
+import fr.zeltaria.zenaligue.classes.Player;
 import fr.zeltaria.zenaligue.database.SQLRequest;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -12,17 +13,13 @@ public class DeletePlayerCommand {
     }
 
     public void deletePlayer() {
-        int teamId = event.getOption("team").getAsInt();
-        int jersey = event.getOption("jersey").getAsInt();
-        if(!SQLRequest.isTeamExist(teamId)){
-            event.getHook().sendMessage("L'équipe n'existe pas !").queue();
-            return;
-        }
-        if(!SQLRequest.isPlayerExist(teamId, jersey)){
+        int id =event.getOption("id").getAsInt();
+        Player player = SQLRequest.getPlayerFromId(id);
+        if(player == null){
             event.getHook().sendMessage("Le joueur n'existe pas !").queue();
             return;
         }
-        event.getHook().sendMessage("Le joueur **%s** a bien été supprimé !".formatted(SQLRequest.getPlayer(teamId, jersey).name())).queue();
-        SQLRequest.removePlayerFromTeam(teamId, jersey);
+        event.getHook().sendMessage("Le joueur **%s** a bien été supprimé !".formatted(player.name())).queue();
+        SQLRequest.removePlayerFromId(id);
     }
 }
