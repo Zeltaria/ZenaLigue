@@ -113,6 +113,10 @@ public class CommandManager extends ListenerAdapter {
         OptionData hourOption = new OptionData(OptionType.STRING, "hour", "Heure du démarrage de la journée (HH:mm)", true);
         commandData.add(Commands.slash("start_day", "Démarrer la journée").addOptions(hourOption));
 
+        OptionData messageOption = new OptionData(OptionType.STRING, "message", "Message", false);
+        OptionData imageOption = new OptionData(OptionType.ATTACHMENT, "image", "image", false);
+        commandData.add(Commands.slash("say", "Envoyer un message et/ou une image").addOptions(messageOption, imageOption));
+
         return commandData;
     }
 
@@ -241,6 +245,13 @@ public class CommandManager extends ListenerAdapter {
                     event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
                 }
             }
+            case "say" -> {
+                if(memberCanUseCommand(member, event)){
+                    event.deferReply().queue();
+                    new SayCommand(event).say();
+                } else {
+                    event.reply("Cette commande est réservée aux administrateurs du serveur!").setEphemeral(true).queue();
+                }            }
             default -> event.reply("Cette commande n'existe pas !").setEphemeral(true).queue();
         }
     }

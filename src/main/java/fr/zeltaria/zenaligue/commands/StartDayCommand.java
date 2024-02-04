@@ -95,6 +95,7 @@ public class StartDayCommand {
                         if(m.id() == goal.matchId()){
                             m.addBut(goal);
                             break;
+
                         }
                     }
                 }
@@ -112,11 +113,6 @@ public class StartDayCommand {
                 minute[0] = 45;
                 mi_temps[0] = 2;
                 channel.sendMessage("```Début de la seconde mi-temps !```").queue();
-                StringBuilder text_mi_temps2 = new StringBuilder();
-                for (Match match : matchs) {
-                    text_mi_temps2.append(" %s **%s** - **%s** %s \n".formatted((match.team1().name() + " " + match.team1().logo().getEmoji()), match.scoret1(), match.scoret2(), (match.team2().logo().getEmoji() + " " + match.team2().name())));
-                }
-                channel.sendMessage(text_mi_temps2.toString()).queue();
             }
             if(minute[0] == 90){
                 channel.sendMessage("```Fin des matchs !```").queue();
