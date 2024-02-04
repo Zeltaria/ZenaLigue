@@ -50,5 +50,6 @@ public class SayCommand {
                 messageCreateAction.addContent("\n" + image.getUrl());
             }
             messageCreateAction.queue();
+            event.getHook().sendMessage("Message envoyé !\nTu peux aller le voir sur " + channel.getAsMention()).queue();
         }
 }
